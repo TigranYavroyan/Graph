@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "graph_adj_list.c": "cpp",
+        "iostream": "cpp",
+        "stdexcept": "cpp"
+    }
+}
