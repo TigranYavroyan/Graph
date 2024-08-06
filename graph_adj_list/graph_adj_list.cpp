@@ -11,21 +11,6 @@ Graph_adj_list::Graph_adj_list (int n, int (*edges)[2], int size) : al(n + 1) {
     }
 }
 
-void Graph_adj_list::print () const {
-    int size = al.size();
-    int row_size;
-
-    for (int i = 0; i < size; ++i) {
-        row_size = al[i].size();
-        std::cout << i << " -> ";
-        for (int j = 0; j < row_size; ++j) {
-            std::cout << al[i][j];
-            if ((j + 1) != row_size) std::cout << ", ";
-        }
-        std::cout << '\n';
-    }
-}
-
 void Graph_adj_list::add_edge (int u, int v) {
     if (u >= al.size() || v >= al.size())
         throw std::out_of_range("Out of range");
@@ -170,9 +155,9 @@ std::vector<int> Graph_adj_list::shortest_path (int u, int v) const {
     throw std::invalid_argument("There is no path\n");
 }
 
-std::vector<int> Graph_adj_list::curr_levels_vertexes (int u, int level) {
+std::vector<int> Graph_adj_list::curr_levels_vertexes (int u, int level) const {
 	if (u >= al.size() || level < 0)
-		throw std::invalid_argument("invalid vertex val");
+		throw std::out_of_range("Out of range");
 
 	if (level == 0) return {u};
 
@@ -210,6 +195,38 @@ std::vector<int> Graph_adj_list::curr_levels_vertexes (int u, int level) {
 	}
 
 	throw std::out_of_range("out of range");
+}
+
+bool Graph_adj_list::is_cycled () const {
+	vec_vis visits(al.size(), false);
+	return _is_cycled (0, visits, -1);
+}
+
+bool Graph_adj_list::_is_cycled (int u, vec_vis& visits, int parent) const {
+	visits[u] = true;
+	for (int v : al[u]) {
+		if (v != parent) {
+			if (visits[v] == true) return true;
+			if (_is_cycled(v, visits, u)) return true;
+		}
+	}
+
+	return false;
+}
+
+void Graph_adj_list::print () const {
+    int size = al.size();
+    int row_size;
+
+    for (int i = 0; i < size; ++i) {
+        row_size = al[i].size();
+        std::cout << i << " -> ";
+        for (int j = 0; j < row_size; ++j) {
+            std::cout << al[i][j];
+            if ((j + 1) != row_size) std::cout << ", ";
+        }
+        std::cout << '\n';
+    }
 }
 
 bool Graph_adj_list::_not_same_vals (int i, int val) const {

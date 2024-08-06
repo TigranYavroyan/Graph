@@ -57,6 +57,17 @@ int main () {
         {5, 4},
     };
 
+	vector<vector<int>> cycled_edges_1 = {
+        {0, 1},
+        {0, 2},
+        {1, 3},
+        {2, 4},
+        {2, 5},
+        {3, 7},
+		{6, 1},
+		{7, 6},
+    };
+
     int matrix[][2] = {
         {0, 3},
         {1, 2},
@@ -69,7 +80,7 @@ int main () {
         {5, 4}
     };
 
-    graph gr(edges_max(edges_4), edges_4);
+    graph gr(edges_max(cycled_edges_1), cycled_edges_1);
     gr.print();
     std::cout << '\n';
     // gr.bfs([](const int val){std::cout << val << ' ';});
@@ -86,9 +97,10 @@ int main () {
 	// 	print_path(row);
 	// 	std::cout << '\n';
 	// }
-	std::vector<int> level = gr.curr_levels_vertexes(0, 3);
-	for (int val : level) {
-		std::cout << val << ' ';
-	}
-	std::cout << '\n';
+	// std::vector<int> level = gr.curr_levels_vertexes(0, 2);
+	// for (int val : level) {
+	// 	std::cout << val << ' ';
+	// }
+	// std::cout << '\n';
+	std::cout << std::boolalpha << gr.is_cycled() << std::endl;
 }

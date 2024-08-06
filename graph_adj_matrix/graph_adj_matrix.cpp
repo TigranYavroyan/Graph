@@ -160,7 +160,7 @@ std::vector<int> Graph_adj_matrix::shortest_path (int u, int v) const {
 
 std::vector<int> Graph_adj_matrix::curr_levels_vertexes (int u, int level) {
 	if (u >= am.size() || level < 0)
-		throw std::invalid_argument("invalid vertex val");
+		throw std::out_of_range("Out of range");
 
 	if (level == 0) return {u};
 
@@ -198,6 +198,23 @@ std::vector<int> Graph_adj_matrix::curr_levels_vertexes (int u, int level) {
 	}
 
 	throw std::out_of_range("out of range");
+}
+
+bool Graph_adj_matrix::is_cycled () const {
+	vec_vis visits(am.size(), false);
+	return _is_cycled(0, visits, -1);
+}
+
+bool Graph_adj_matrix::_is_cycled (int u, vec_vis& visits, int parent) const {
+	visits[u] = true;
+	for (int i = 0; i < am.size(); ++i) {
+		if (am[u][i] == 1 && i != parent) {
+			if (visits[i] == true) return true;
+			if (_is_cycled(i, visits, u)) return true;
+		}
+	}
+
+	return false;
 }
 
 void Graph_adj_matrix::print () const {

@@ -26,8 +26,9 @@ public:
     void bfs (func f, int u = 0);
 
 	list find_all_paths (int u, int v) const;
-	std::vector<int> curr_levels_vertexes (int u, int level);
+	std::vector<int> curr_levels_vertexes (int u, int level) const;
     std::vector<int> shortest_path (int u, int v) const; // unweighted graph
+	bool is_cycled () const;
 
     void print () const;
 private:
@@ -39,6 +40,7 @@ private:
     void _dfs (int u, vec_vis& visits, func f);
 
 	void _find_all_paths (int u, int v, list& res, std::vector<int>& sub_res, vec_vis& visits) const;
+	bool _is_cycled (int u, vec_vis& visits, int parent) const;
 };
 
 #include "graph_adj_list.cpp"
