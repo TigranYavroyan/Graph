@@ -15,7 +15,7 @@ Graph_adj_matrix::Graph_adj_matrix(int n, int (*matrix)[2], int size) : am(n + 1
 void Graph_adj_matrix::add_edge (int u, int v) {
     if (u >= am.size() || v >= am.size())
         throw std::out_of_range("Out of range");
-    
+
     am[u][v] = 1;
     am[v][u] = 1; // if undirected
 }
@@ -34,7 +34,7 @@ template <typename func>
 void Graph_adj_matrix::dfs (func f, int u) {
     if (u >= am.size())
         throw std::out_of_range("Out of range");
-    
+
     vec_vis visits(am.size(), false);
     _dfs(u, visits, f);
 }
@@ -92,6 +92,38 @@ void Graph_adj_matrix::bfs (func f, int u) {
     // }
 }
 
+Graph_adj_matrix::matrix Graph_adj_matrix::find_all_paths (int u, int v) const {
+	if (u == v)
+		return matrix();
+
+	vec_vis visits(am.size(), false);
+	matrix res{};
+	std::vector<int> sub_res{};
+
+	_find_all_paths(u, v, res, sub_res, visits);
+	return res;
+}
+
+void Graph_adj_matrix::_find_all_paths (int u, int v, matrix& res, std::vector<int>& sub_res, vec_vis& visits) const {
+	sub_res.push_back(u);
+
+	if (u == v) {
+		res.push_back(sub_res);
+		sub_res.pop_back();
+		return;
+	}
+
+	visits[u] = true;
+	for (int i = 0; i < am.size(); ++i) {
+		if (!visits[i] && am[u][i] == 1) {
+			_find_all_paths(i, v, res, sub_res, visits);
+			visits[i] = false;
+		}
+	}
+
+	sub_res.pop_back();
+}
+
 std::vector<int> Graph_adj_matrix::shortest_path (int u, int v) const {
     int am_size = am.size();
 
@@ -124,6 +156,48 @@ std::vector<int> Graph_adj_matrix::shortest_path (int u, int v) const {
     }
 
     throw std::invalid_argument("There is no path\n");
+}
+
+std::vector<int> Graph_adj_matrix::curr_levels_vertexes (int u, int level) {
+	if (u >= am.size() || level < 0)
+		throw std::invalid_argument("invalid vertex val");
+
+	if (level == 0) return {u};
+
+	std::vector<int> res{};
+	vec_vis visits(am.size(), false);
+	std::queue<int> q;
+	int size;
+
+	q.push(u);
+
+	while (!q.empty()) {
+
+		if (!level) {
+			while (!q.empty()) {
+				res.push_back(q.front());
+				q.pop();
+			}
+
+			return res;
+		}
+
+		size = q.size();
+		while (size--) {
+			u = q.front(); q.pop();
+
+			for (int v = 0; v < am.size(); ++v) {
+				if (!visits[v] && am[u][v] == 1) {
+					q.push(v);
+					visits[v] = true;
+				}
+			}
+
+		}
+		--level;
+	}
+
+	throw std::out_of_range("out of range");
 }
 
 void Graph_adj_matrix::print () const {

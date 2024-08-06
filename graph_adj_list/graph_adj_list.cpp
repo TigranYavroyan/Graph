@@ -91,7 +91,7 @@ void Graph_adj_list::bfs (func f, int u) {
 
             f(val);
             visits[val] = true;
-                
+
             for (int v : al[val]) {
                 if (!visits[v]) {
                     q.push(v);
@@ -102,6 +102,39 @@ void Graph_adj_list::bfs (func f, int u) {
         std::cout << '\n';
     }
 
+}
+
+Graph_adj_list::list Graph_adj_list::find_all_paths (int u, int v) const {
+	if (u == v)
+		return list();
+
+	vec_vis visits(al.size(), false);
+	list res{};
+	std::vector<int> sub_res{};
+
+	_find_all_paths(u, v, res, sub_res, visits);
+	return res;
+}
+
+void Graph_adj_list::_find_all_paths (int u, int v, list& res, std::vector<int>& sub_res, vec_vis& visits) const {
+
+	sub_res.push_back(u);
+
+	if (u == v) {
+		res.push_back(sub_res);
+		sub_res.pop_back();
+		return;
+	}
+
+	visits[u] = true;
+	for (int val : al[u]) {
+		if (!visits[val]) {
+			_find_all_paths (val, v, res, sub_res, visits);
+			visits[val] = false;
+		}
+	}
+
+	sub_res.pop_back();
 }
 
 std::vector<int> Graph_adj_list::shortest_path (int u, int v) const {
@@ -135,6 +168,48 @@ std::vector<int> Graph_adj_list::shortest_path (int u, int v) const {
     }
 
     throw std::invalid_argument("There is no path\n");
+}
+
+std::vector<int> Graph_adj_list::curr_levels_vertexes (int u, int level) {
+	if (u >= al.size() || level < 0)
+		throw std::invalid_argument("invalid vertex val");
+
+	if (level == 0) return {u};
+
+	std::vector<int> res{};
+	vec_vis visits(al.size(), false);
+	std::queue<int> q;
+	int size;
+
+	q.push(u);
+
+	while (!q.empty()) {
+
+		if (!level) {
+			while (!q.empty()) {
+				res.push_back(q.front());
+				q.pop();
+			}
+
+			return res;
+		}
+
+		size = q.size();
+		while (size--) {
+			u = q.front(); q.pop();
+
+			for (int v : al[u]) {
+				if (!visits[v]) {
+					q.push(v);
+					visits[v] = true;
+				}
+			}
+
+		}
+		--level;
+	}
+
+	throw std::out_of_range("out of range");
 }
 
 bool Graph_adj_list::_not_same_vals (int i, int val) const {

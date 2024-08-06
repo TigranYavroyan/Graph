@@ -7,7 +7,7 @@
 #include <algorithm>
 
 class Graph_adj_list {
-protected:
+public:
     using list = std::vector<std::vector<int>>;
     using vec_vis = std::vector<bool>;
 public:
@@ -25,6 +25,8 @@ public:
     template <typename func>
     void bfs (func f, int u = 0);
 
+	list find_all_paths (int u, int v) const;
+	std::vector<int> curr_levels_vertexes (int u, int level);
     std::vector<int> shortest_path (int u, int v) const; // unweighted graph
 
     void print () const;
@@ -34,7 +36,9 @@ private:
     bool _not_same_vals (int i, int val) const;
 
     template <typename func>
-    void _dfs (int u, vec_vis& visits, func f) ;
+    void _dfs (int u, vec_vis& visits, func f);
+
+	void _find_all_paths (int u, int v, list& res, std::vector<int>& sub_res, vec_vis& visits) const;
 };
 
 #include "graph_adj_list.cpp"

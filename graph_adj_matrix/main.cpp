@@ -1,5 +1,5 @@
-#include "graph_adj_matrix.hpp"
-#include "../gr_helpers/helpers.h"
+#include <graph_adj_matrix.hpp>
+#include <helpers.h>
 
 using std::vector;
 using graph = Graph_adj_matrix;
@@ -46,6 +46,17 @@ int main () {
         {4, 3},
     };
 
+	vector<vector<int>> edges_4 = {
+        {0, 1},
+        {0, 3},
+        {1, 4},
+        {2, 3},
+        {2, 5},
+        {3, 4},
+        {4, 5},
+        {5, 4},
+    };
+
     int matrix[][2] = {
         {0, 3},
         {1, 2},
@@ -60,9 +71,23 @@ int main () {
 
     int size_matr = sizeof(matrix) / sizeof(matrix[0]);
 
-    graph gr(edges_max(edges_1), edges_1);
+    graph gr(edges_max(edges_4), edges_4);
     gr.print();
     // gr.bfs([](const int val){std::cout << val << ' ';});
 
-    print_path(gr.shortest_path(0, 5));
+    // print_path(gr.shortest_path(0, 5));
+	// Graph_adj_matrix::matrix res = gr.find_all_paths(0, 2);
+
+	// for (const std::vector<int>& row : res) {
+	// 	print_path(row);
+	// 	std::cout << '\n';
+	// }
+
+	std::vector<int> level = gr.curr_levels_vertexes(0, 0);
+	for (int val : level) {
+		std::cout << val << ' ';
+	}
+	std::cout << '\n';
+
+
 }
