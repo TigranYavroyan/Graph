@@ -237,6 +237,44 @@ bool Graph_adj_list<directed>::_is_cycled (int u, vec_vis& visits, vec_vis& in_s
 }
 
 template <bool directed>
+std::vector<int> Graph_adj_list<directed>::top_sort () const { // Kahn's algorithm
+    int size = al.size();
+    int u;
+    std::vector<int> res;
+    std::vector<int> in_degree(size, 0);
+    std::queue<int> q;
+
+    for (u = 0; u < size; ++u) {
+        for (int v : al[u]) {
+            ++in_degree[v];
+        }
+    }
+
+    for (u = 0; u < size; ++u) {
+        if (in_degree[u] == 0) q.push(u);
+    }
+
+    while (!q.empty()) {
+        u = q.front(); q.pop();
+        res.push_back(u);
+
+        for (int v : al[u]) {
+            --in_degree[v];
+            if (in_degree[v] == 0) q.push(v);
+        }
+    }
+
+    if (res.size() != size) return {}; // cycle in graph
+
+    return res;
+}
+
+// template <bool directed>
+// void Graph_adj_list<directed>::_top_sort () const {
+
+// }
+
+template <bool directed>
 void Graph_adj_list<directed>::print () const {
     int size = al.size();
     int row_size;

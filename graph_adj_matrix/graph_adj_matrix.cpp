@@ -21,7 +21,8 @@ void Graph_adj_matrix<directed>::add_edge (int u, int v) {
         throw std::out_of_range("Out of range");
 
     am[u][v] = 1;
-    am[v][u] = 1; // if undirected
+    if (!directed)
+        am[v][u] = 1; // if undirected
 }
 
 template <bool directed>
@@ -239,6 +240,41 @@ bool Graph_adj_matrix<directed>::_is_cycled (int u, vec_vis& visits, vec_vis& in
     in_stack[u] = false;
 
 	return false;
+}
+
+template <bool directed>
+std::vector<int> Graph_adj_matrix<directed>::top_sort () const { // Kahn's algorithm
+    int size = am.size();
+    int u;
+    std::vector<int> res;
+    std::vector<int> in_degree(size, 0);
+    std::queue<int> q;
+
+    for (u = 0; u < size; ++u) {
+        for (int v = 0; v < size; ++v) {
+            if (am[u][v] == 1) ++in_degree[v];
+        }
+    }
+
+    for (u = 0; u < size; ++u) {
+        if (in_degree[u] == 0) q.push(u);
+    }
+
+    while (!q.empty()) {
+        u = q.front(); q.pop();
+        res.push_back(u);
+
+        for (int v = 0; v < size; ++v) {
+            if (am[u][v] == 1) {
+                --in_degree[v];
+                if (in_degree[v] == 0) q.push(v);
+            }
+        }
+    }
+
+    if (res.size() != size) return {};
+
+    return res;
 }
 
 template <bool directed>

@@ -1,11 +1,31 @@
 #include <graph_adj_list.hpp>
 #include <helpers.h>
 
-using graph = Graph_adj_list<false>;
+using graph = Graph_adj_list<true>;
 using std::vector;
 using namespace graph_utils;
 
 int main () {
+    vector<vector<int>> edges_1 {
+        {0, 1},
+        {0, 2},
+        {1, 3},
+        {2, 3},
+        {3, 4},
+    };
+
+    vector<vector<int>> edges_2 {
+        {0, 1},
+        {0, 2},
+        {1, 3},
+        {2, 4},
+        {2, 5},
+        {3, 7},
+        {6, 8},
+        {7, 6},
+    };
+
+
     vector<vector<int>> cycled_edges_1 {
         {0, 1},
         {0, 2},
@@ -32,7 +52,7 @@ int main () {
         {7, 0},
     };
 
-    graph gr(edges_max(cycled_edges_1), cycled_edges_1);
+    graph gr(edges_max(cycled_edges_2), cycled_edges_2);
     gr.print();
     std::cout << '\n';
     // gr.bfs([](const int val){std::cout << val << ' ';});
@@ -55,4 +75,12 @@ int main () {
 	// }
 	// std::cout << '\n';
 	std::cout << std::boolalpha << gr.is_cycled() << std::endl;
+    auto res = gr.top_sort();
+
+    if (res.empty()) std::cout << "top sort nema" << std::endl;
+    else {
+        for (auto val : res) {
+            std::cout << val << ' ';
+        }
+    }
 }

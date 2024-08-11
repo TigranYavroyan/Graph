@@ -31,6 +31,7 @@ public:
 	matrix find_all_paths (int u, int v) const;
     std::vector<int> shortest_path (int u, int v) const;
 	bool is_cycled () const;
+    std::vector<int> top_sort () const;
 
     void print () const;
 private:

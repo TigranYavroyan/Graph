@@ -30,6 +30,7 @@ public:
 	std::vector<int> curr_levels_vertexes (int u, int level) const;
     std::vector<int> shortest_path (int u, int v) const; // unweighted graph
 	bool is_cycled () const;
+    std::vector<int> top_sort () const;
 
     void print () const;
 private:
