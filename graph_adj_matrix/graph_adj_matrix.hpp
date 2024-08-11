@@ -7,6 +7,7 @@
 #include <queue>
 #include <algorithm>
 
+template <bool directed = false>
 class Graph_adj_matrix {
 public:
     using matrix = std::vector<std::vector<int>>;
@@ -39,7 +40,7 @@ private:
 
     template <typename func>
     void _dfs (int u, vec_vis& visits, func f);
-	bool _is_cycled (int u, vec_vis& visits, int parent) const;
+	bool _is_cycled (int u, vec_vis& visits, vec_vis& in_stack, int parent) const;
 };
 
 #include "graph_adj_matrix.cpp"

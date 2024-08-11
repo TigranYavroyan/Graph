@@ -1,18 +1,22 @@
 #include "graph_adj_matrix.hpp"
 
-Graph_adj_matrix::Graph_adj_matrix (int n, const matrix& edges) : am(n + 1, std::vector<int>(n + 1, 0)) {
+
+template <bool directed>
+Graph_adj_matrix<directed>::Graph_adj_matrix (int n, const matrix& edges) : am(n + 1, std::vector<int>(n + 1, 0)) {
     for (auto& edge : edges) {
         add_edge(edge[0], edge[1]);
     }
 }
 
-Graph_adj_matrix::Graph_adj_matrix(int n, int (*matrix)[2], int size) : am(n + 1, std::vector<int>(n + 1, 0)) {
+template <bool directed>
+Graph_adj_matrix<directed>::Graph_adj_matrix(int n, int (*matrix)[2], int size) : am(n + 1, std::vector<int>(n + 1, 0)) {
     for (int i = 0; i < size; ++i) {
         add_edge(matrix[i][0], matrix[i][1]);
     }
 }
 
-void Graph_adj_matrix::add_edge (int u, int v) {
+template <bool directed>
+void Graph_adj_matrix<directed>::add_edge (int u, int v) {
     if (u >= am.size() || v >= am.size())
         throw std::out_of_range("Out of range");
 
@@ -20,7 +24,8 @@ void Graph_adj_matrix::add_edge (int u, int v) {
     am[v][u] = 1; // if undirected
 }
 
-void Graph_adj_matrix::add_vertex () {
+template <bool directed>
+void Graph_adj_matrix<directed>::add_vertex () {
     int dest_size = am.size() + 1;
 
     for (std::vector<int>& row : am) {
@@ -30,8 +35,9 @@ void Graph_adj_matrix::add_vertex () {
     am.resize(dest_size, std::vector<int>(dest_size, 0));
 }
 
+template <bool directed>
 template <typename func>
-void Graph_adj_matrix::dfs (func f, int u) {
+void Graph_adj_matrix<directed>::dfs (func f, int u) {
     if (u >= am.size())
         throw std::out_of_range("Out of range");
 
@@ -39,8 +45,9 @@ void Graph_adj_matrix::dfs (func f, int u) {
     _dfs(u, visits, f);
 }
 
+template <bool directed>
 template <typename func>
-void Graph_adj_matrix::_dfs (int u, vec_vis& visits, func f) {
+void Graph_adj_matrix<directed>::_dfs (int u, vec_vis& visits, func f) {
     f(u);
     visits[u] = true;
 
@@ -51,8 +58,9 @@ void Graph_adj_matrix::_dfs (int u, vec_vis& visits, func f) {
 
 }
 
+template <bool directed>
 template <typename func>
-void Graph_adj_matrix::bfs (func f, int u) {
+void Graph_adj_matrix<directed>::bfs (func f, int u) {
     std::queue<int> q;
     int am_size = am.size();
     vec_vis visits(am_size, false);
@@ -92,7 +100,8 @@ void Graph_adj_matrix::bfs (func f, int u) {
     // }
 }
 
-Graph_adj_matrix::matrix Graph_adj_matrix::find_all_paths (int u, int v) const {
+template <bool directed>
+typename Graph_adj_matrix<directed>::matrix Graph_adj_matrix<directed>::find_all_paths (int u, int v) const {
 	if (u == v)
 		return matrix();
 
@@ -104,7 +113,8 @@ Graph_adj_matrix::matrix Graph_adj_matrix::find_all_paths (int u, int v) const {
 	return res;
 }
 
-void Graph_adj_matrix::_find_all_paths (int u, int v, matrix& res, std::vector<int>& sub_res, vec_vis& visits) const {
+template <bool directed>
+void Graph_adj_matrix<directed>::_find_all_paths (int u, int v, matrix& res, std::vector<int>& sub_res, vec_vis& visits) const {
 	sub_res.push_back(u);
 
 	if (u == v) {
@@ -124,7 +134,8 @@ void Graph_adj_matrix::_find_all_paths (int u, int v, matrix& res, std::vector<i
 	sub_res.pop_back();
 }
 
-std::vector<int> Graph_adj_matrix::shortest_path (int u, int v) const {
+template <bool directed>
+std::vector<int> Graph_adj_matrix<directed>::shortest_path (int u, int v) const {
     int am_size = am.size();
 
     std::queue<int> q;
@@ -158,7 +169,8 @@ std::vector<int> Graph_adj_matrix::shortest_path (int u, int v) const {
     throw std::invalid_argument("There is no path\n");
 }
 
-std::vector<int> Graph_adj_matrix::curr_levels_vertexes (int u, int level) {
+template <bool directed>
+std::vector<int> Graph_adj_matrix<directed>::curr_levels_vertexes (int u, int level) {
 	if (u >= am.size() || level < 0)
 		throw std::out_of_range("Out of range");
 
@@ -200,24 +212,37 @@ std::vector<int> Graph_adj_matrix::curr_levels_vertexes (int u, int level) {
 	throw std::out_of_range("out of range");
 }
 
-bool Graph_adj_matrix::is_cycled () const {
-	vec_vis visits(am.size(), false);
-	return _is_cycled(0, visits, -1);
+template <bool directed>
+bool Graph_adj_matrix<directed>::is_cycled () const {
+    int size = am.size();
+	vec_vis visits(size, false);
+	vec_vis in_stack(size, false);
+
+    for (int u = 0; u < size; ++u) {
+        if (_is_cycled(u, visits, in_stack, -1))
+            return true;
+    }
+
+    return false;
 }
 
-bool Graph_adj_matrix::_is_cycled (int u, vec_vis& visits, int parent) const {
+template <bool directed>
+bool Graph_adj_matrix<directed>::_is_cycled (int u, vec_vis& visits, vec_vis& in_stack, int parent) const {
 	visits[u] = true;
+    in_stack[u] = true;
 	for (int i = 0; i < am.size(); ++i) {
 		if (am[u][i] == 1 && i != parent) {
-			if (visits[i] == true) return true;
-			if (_is_cycled(i, visits, u)) return true;
+			if (in_stack[i] == true) return true;
+			if (_is_cycled(i, visits, in_stack, u)) return true;
 		}
 	}
+    in_stack[u] = false;
 
 	return false;
 }
 
-void Graph_adj_matrix::print () const {
+template <bool directed>
+void Graph_adj_matrix<directed>::print () const {
     int size = am.size();
 
     int maxRowIndexDigits = 2/*std::to_string(m_row - 1).length()*/;

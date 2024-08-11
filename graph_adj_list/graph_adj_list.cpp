@@ -1,33 +1,38 @@
 #include "graph_adj_list.hpp"
 
-Graph_adj_list::Graph_adj_list (int n, const list& edges) : al(n + 1) {
+template <bool directed>
+Graph_adj_list<directed>::Graph_adj_list (int n, const list& edges) : al(n + 1) {
     for (int i = 0; i < edges.size(); ++i) {
         add_edge(edges[i][0], edges[i][1]);
     }
 }
-Graph_adj_list::Graph_adj_list (int n, int (*edges)[2], int size) : al(n + 1) {
+template <bool directed>
+Graph_adj_list<directed>::Graph_adj_list (int n, int (*edges)[2], int size) : al(n + 1) {
     for (int i = 0; i < size; ++i) {
         add_edge(edges[i][0], edges[i][1]);
     }
 }
 
-void Graph_adj_list::add_edge (int u, int v) {
+template <bool directed>
+void Graph_adj_list<directed>::add_edge (int u, int v) {
     if (u >= al.size() || v >= al.size())
         throw std::out_of_range("Out of range");
 
     if (_not_same_vals(u, v))
         al[u].push_back(v);
 
-    if (_not_same_vals(v, u))
+    if (!directed && _not_same_vals(v, u))
         al[v].push_back(u); // if undirected
 }
 
-void Graph_adj_list::add_vertex () {
+template <bool directed>
+void Graph_adj_list<directed>::add_vertex () {
     al.resize(al.size() + 1);
 }
 
+template <bool directed>
 template <typename func>
-void Graph_adj_list::dfs (func f, int u) {
+void Graph_adj_list<directed>::dfs (func f, int u) {
     if (u >= al.size())
         throw std::out_of_range("Out of range");
 
@@ -35,8 +40,9 @@ void Graph_adj_list::dfs (func f, int u) {
     _dfs(u, visits, f);
 }
 
+template <bool directed>
 template <typename func>
-void Graph_adj_list::_dfs (int u, vec_vis& visits, func f) {
+void Graph_adj_list<directed>::_dfs (int u, vec_vis& visits, func f) {
     f(u);
     visits[u] = true;
     for (auto& v : al[u]) {
@@ -44,8 +50,9 @@ void Graph_adj_list::_dfs (int u, vec_vis& visits, func f) {
     }
 }
 
+template <bool directed>
 template <typename func>
-void Graph_adj_list::bfs (func f, int u) {
+void Graph_adj_list<directed>::bfs (func f, int u) {
     if (u >= al.size())
         throw std::out_of_range("Out of range");
 
@@ -89,7 +96,8 @@ void Graph_adj_list::bfs (func f, int u) {
 
 }
 
-Graph_adj_list::list Graph_adj_list::find_all_paths (int u, int v) const {
+template <bool directed>
+typename Graph_adj_list<directed>::list Graph_adj_list<directed>::find_all_paths (int u, int v) const {
 	if (u == v)
 		return list();
 
@@ -101,7 +109,8 @@ Graph_adj_list::list Graph_adj_list::find_all_paths (int u, int v) const {
 	return res;
 }
 
-void Graph_adj_list::_find_all_paths (int u, int v, list& res, std::vector<int>& sub_res, vec_vis& visits) const {
+template <bool directed>
+void Graph_adj_list<directed>::_find_all_paths (int u, int v, list& res, std::vector<int>& sub_res, vec_vis& visits) const {
 
 	sub_res.push_back(u);
 
@@ -122,7 +131,8 @@ void Graph_adj_list::_find_all_paths (int u, int v, list& res, std::vector<int>&
 	sub_res.pop_back();
 }
 
-std::vector<int> Graph_adj_list::shortest_path (int u, int v) const {
+template <bool directed>
+std::vector<int> Graph_adj_list<directed>::shortest_path (int u, int v) const {
     int al_size = al.size();
 
     vec_vis visits(al_size, false);
@@ -155,7 +165,8 @@ std::vector<int> Graph_adj_list::shortest_path (int u, int v) const {
     throw std::invalid_argument("There is no path\n");
 }
 
-std::vector<int> Graph_adj_list::curr_levels_vertexes (int u, int level) const {
+template <bool directed>
+std::vector<int> Graph_adj_list<directed>::curr_levels_vertexes (int u, int level) const {
 	if (u >= al.size() || level < 0)
 		throw std::out_of_range("Out of range");
 
@@ -197,24 +208,36 @@ std::vector<int> Graph_adj_list::curr_levels_vertexes (int u, int level) const {
 	throw std::out_of_range("out of range");
 }
 
-bool Graph_adj_list::is_cycled () const {
-	vec_vis visits(al.size(), false);
-	return _is_cycled (0, visits, -1);
+template <bool directed>
+bool Graph_adj_list<directed>::is_cycled () const {
+    int size = al.size();
+	vec_vis visits(size, false);
+    vec_vis in_stack (size, false);
+    for (int u = 0; u < size; ++u) {
+	    if (_is_cycled (u, visits, in_stack, -1))
+            return true;
+    }
+
+    return false;
 }
 
-bool Graph_adj_list::_is_cycled (int u, vec_vis& visits, int parent) const {
+template <bool directed>
+bool Graph_adj_list<directed>::_is_cycled (int u, vec_vis& visits, vec_vis& in_stack, int parent) const {
 	visits[u] = true;
+    in_stack[u] = true;
 	for (int v : al[u]) {
 		if (v != parent) {
-			if (visits[v] == true) return true;
-			if (_is_cycled(v, visits, u)) return true;
+			if (in_stack[v] == true) return true;
+			if (_is_cycled(v, visits, in_stack, u)) return true;
 		}
 	}
+    in_stack[u] = false;
 
 	return false;
 }
 
-void Graph_adj_list::print () const {
+template <bool directed>
+void Graph_adj_list<directed>::print () const {
     int size = al.size();
     int row_size;
 
@@ -229,7 +252,8 @@ void Graph_adj_list::print () const {
     }
 }
 
-bool Graph_adj_list::_not_same_vals (int i, int val) const {
+template <bool directed>
+bool Graph_adj_list<directed>::_not_same_vals (int i, int val) const {
     for (int u : al[i]) {
         if (u == val)
             return false;
