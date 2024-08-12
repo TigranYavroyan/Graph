@@ -60,18 +60,39 @@ int main () {
 		{8, 9},
 	};
 
-    graph gr(edges_max(cycled_edges_2), cycled_edges_2);
+	vector<vector<int>> for_scc = {
+		{0, 1},
+		{1, 2},
+		{1, 4},
+		{1, 6},
+		{2, 3},
+		{3, 2},
+		{3, 4},
+		{3, 5},
+		{4, 5},
+		{5, 4},
+		{6, 0},
+		{6, 2},
+	};
+
+    graph gr(edges_max(for_scc), for_scc);
     gr.print();
-    std::cout << '\n';
-	gr.transpose();
-	gr.print();
-	std::cout << '\n';
+    endl();
+	print_path(gr.fill_in_order());
+    endl(2);
+	gr.transpose         ();
+    gr.print();
+    endl();
+	print_path(gr.fill_in_order());
+	// gr.transpose();
+	// gr.print();
+	// endl();
 
 	// vector<vector<int>> all_paths = gr.find_all_paths(0, edges_max(edges_2));
 
 	// for (vector<int>& row : all_paths) {
 	// 	print_path(row);
-	// 	std::cout << '\n';
+	// 	endl();
 	// }
 
 	// std::cout << std::boolalpha << gr.is_cycled() << std::endl;

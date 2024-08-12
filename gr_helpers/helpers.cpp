@@ -17,3 +17,8 @@ int graph_utils::edges_max (const std::vector<std::vector<int>>& edges) {
     }
     return max.value();
 }
+
+void graph_utils::endl (int count) {
+	while (count--)
+		std::cout << '\n';
+}

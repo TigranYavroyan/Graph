@@ -7,14 +7,14 @@ Graph_adj_list<directed>::Graph_adj_list (int n, const list& edges) : al(n + 1) 
     }
 }
 template <bool directed>
-Graph_adj_list<directed>::Graph_adj_list (int n, int (*edges)[2], int size) : al(n + 1) {
+Graph_adj_list<directed>::Graph_adj_list (int n, val_type (*edges)[2], int size) : al(n + 1) {
     for (int i = 0; i < size; ++i) {
         add_edge(edges[i][0], edges[i][1]);
     }
 }
 
 template <bool directed>
-void Graph_adj_list<directed>::add_edge (int u, int v) {
+void Graph_adj_list<directed>::add_edge (val_type u, val_type v) {
     if (u >= al.size() || v >= al.size())
         throw std::out_of_range("Out of range");
 
@@ -32,7 +32,7 @@ void Graph_adj_list<directed>::add_vertex () {
 
 template <bool directed>
 template <typename func>
-void Graph_adj_list<directed>::dfs (func f, int u) {
+void Graph_adj_list<directed>::dfs (func f, val_type u) {
     if (u >= al.size())
         throw std::out_of_range("Out of range");
 
@@ -42,7 +42,7 @@ void Graph_adj_list<directed>::dfs (func f, int u) {
 
 template <bool directed>
 template <typename func>
-void Graph_adj_list<directed>::_dfs (int u, vec_vis& visits, func f) {
+void Graph_adj_list<directed>::_dfs (val_type u, vec_vis& visits, func f) {
     f(u);
     visits[u] = true;
     for (auto& v : al[u]) {
@@ -52,13 +52,13 @@ void Graph_adj_list<directed>::_dfs (int u, vec_vis& visits, func f) {
 
 template <bool directed>
 template <typename func>
-void Graph_adj_list<directed>::bfs (func f, int u) {
+void Graph_adj_list<directed>::bfs (func f, val_type u) {
     if (u >= al.size())
         throw std::out_of_range("Out of range");
 
     vec_vis visits(al.size(), false);
-    std::queue<int> q;
-    int val;
+    std::queue<val_type> q;
+    val_type val;
 
     q.push(u);
 
@@ -84,7 +84,7 @@ void Graph_adj_list<directed>::bfs (func f, int u) {
             f(val);
             visits[val] = true;
 
-            for (int v : al[val]) {
+            for (val_type v : al[val]) {
                 if (!visits[v]) {
                     q.push(v);
                     visits[v] = true;
@@ -101,7 +101,7 @@ void Graph_adj_list<directed>::transpose () {
 		std::cout << "Can't transpose the undirected graph\n";
 	}
 	int size = al.size();
-	list new_al(size, std::vector<int>(0, 0));
+	list new_al(size, std::vector<val_type>(0, 0));
 
 	for (int i = 0; i < size; ++i) {
 		for (int j = 0; j < al[i].size(); ++j) {
@@ -113,20 +113,20 @@ void Graph_adj_list<directed>::transpose () {
 }
 
 template <bool directed>
-typename Graph_adj_list<directed>::list Graph_adj_list<directed>::find_all_paths (int u, int v) const {
+typename Graph_adj_list<directed>::list Graph_adj_list<directed>::find_all_paths (val_type u, val_type v) const {
 	if (u == v)
 		return list();
 
 	vec_vis visits(al.size(), false);
 	list res{};
-	std::vector<int> sub_res{};
+	std::vector<val_type> sub_res{};
 
 	_find_all_paths(u, v, res, sub_res, visits);
 	return res;
 }
 
 template <bool directed>
-void Graph_adj_list<directed>::_find_all_paths (int u, int v, list& res, std::vector<int>& sub_res, vec_vis& visits) const {
+void Graph_adj_list<directed>::_find_all_paths (val_type u, val_type v, list& res, std::vector<val_type>& sub_res, vec_vis& visits) const {
 
 	sub_res.push_back(u);
 
@@ -137,7 +137,7 @@ void Graph_adj_list<directed>::_find_all_paths (int u, int v, list& res, std::ve
 	}
 
 	visits[u] = true;
-	for (int val : al[u]) {
+	for (val_type val : al[u]) {
 		if (!visits[val]) {
 			_find_all_paths (val, v, res, sub_res, visits);
 			visits[val] = false;
@@ -148,13 +148,13 @@ void Graph_adj_list<directed>::_find_all_paths (int u, int v, list& res, std::ve
 }
 
 template <bool directed>
-std::vector<int> Graph_adj_list<directed>::shortest_path (int u, int v) const {
+std::vector<typename Graph_adj_list<directed>::val_type> Graph_adj_list<directed>::shortest_path (val_type u, val_type v) const {
     int al_size = al.size();
 
     vec_vis visits(al_size, false);
-    std::queue<int> q;
-    std::vector<int> parents(al_size, -1);
-    std::vector<int> res;
+    std::queue<val_type> q;
+    std::vector<val_type> parents(al_size, -1);
+    std::vector<val_type> res;
 
     q.push(u);
     while (!q.empty()) {
@@ -170,7 +170,7 @@ std::vector<int> Graph_adj_list<directed>::shortest_path (int u, int v) const {
             return res;
         }
 
-        for (int v : al[u]) {
+        for (val_type v : al[u]) {
             if (!visits[v]) {
                 if (parents[v] == -1) parents[v] = u;
                 q.push(v);
@@ -182,15 +182,15 @@ std::vector<int> Graph_adj_list<directed>::shortest_path (int u, int v) const {
 }
 
 template <bool directed>
-std::vector<int> Graph_adj_list<directed>::curr_levels_vertexes (int u, int level) const {
+std::vector<typename Graph_adj_list<directed>::val_type> Graph_adj_list<directed>::curr_levels_vertexes (val_type u, int level) const {
 	if (u >= al.size() || level < 0)
 		throw std::out_of_range("Out of range");
 
 	if (level == 0) return {u};
 
-	std::vector<int> res{};
+	std::vector<val_type> res{};
 	vec_vis visits(al.size(), false);
-	std::queue<int> q;
+	std::queue<val_type> q;
 	int size;
 
 	q.push(u);
@@ -210,7 +210,7 @@ std::vector<int> Graph_adj_list<directed>::curr_levels_vertexes (int u, int leve
 		while (size--) {
 			u = q.front(); q.pop();
 
-			for (int v : al[u]) {
+			for (val_type v : al[u]) {
 				if (!visits[v]) {
 					q.push(v);
 					visits[v] = true;
@@ -229,7 +229,7 @@ bool Graph_adj_list<directed>::is_cycled () const {
     int size = al.size();
 	vec_vis visits(size, false);
     vec_vis in_stack (size, false);
-    for (int u = 0; u < size; ++u) {
+    for (val_type u = 0; u < size; ++u) {
 	    if (_is_cycled (u, visits, in_stack, -1))
             return true;
     }
@@ -238,10 +238,10 @@ bool Graph_adj_list<directed>::is_cycled () const {
 }
 
 template <bool directed>
-bool Graph_adj_list<directed>::_is_cycled (int u, vec_vis& visits, vec_vis& in_stack, int parent) const {
+bool Graph_adj_list<directed>::_is_cycled (val_type u, vec_vis& visits, vec_vis& in_stack, val_type parent) const {
 	visits[u] = true;
     in_stack[u] = true;
-	for (int v : al[u]) {
+	for (val_type v : al[u]) {
 		if (v != parent) {
 			if (in_stack[v] == true) return true;
 			if (_is_cycled(v, visits, in_stack, u)) return true;
@@ -253,15 +253,15 @@ bool Graph_adj_list<directed>::_is_cycled (int u, vec_vis& visits, vec_vis& in_s
 }
 
 template <bool directed>
-std::vector<int> Graph_adj_list<directed>::top_sort () const { // Kahn's algorithm
+std::vector<typename Graph_adj_list<directed>::val_type> Graph_adj_list<directed>::top_sort () const { // Kahn's algorithm
     int size = al.size();
-    int u;
-    std::vector<int> res;
-    std::vector<int> in_degree(size, 0); // how many nodes coming in indexes node
-    std::queue<int> q;
+    val_type u;
+    std::vector<val_type> res;
+    std::vector<val_type> in_degree(size, 0); // how many nodes coming in indexes node
+    std::queue<val_type> q;
 
     for (u = 0; u < size; ++u) {
-        for (int v : al[u]) {
+        for (val_type v : al[u]) {
             ++in_degree[v];
         }
     }
@@ -274,7 +274,7 @@ std::vector<int> Graph_adj_list<directed>::top_sort () const { // Kahn's algorit
         u = q.front(); q.pop();
         res.push_back(u);
 
-        for (int v : al[u]) {
+        for (val_type v : al[u]) {
             --in_degree[v];
             if (in_degree[v] == 0) q.push(v);
         }
@@ -291,7 +291,7 @@ int Graph_adj_list<directed>::components_number () const {
 	int components = 0;
 
 	vec_vis visits(size, false);
-	for (int u = 0; u < size; ++u) {
+	for (val_type u = 0; u < size; ++u) {
 		if (!visits[u]) {
 			_dfs_helper(u, visits);
 			++components;
@@ -302,9 +302,34 @@ int Graph_adj_list<directed>::components_number () const {
 }
 
 template <bool directed>
-void Graph_adj_list<directed>::_dfs_helper (int u, vec_vis& visits) const {
+std::vector<typename Graph_adj_list<directed>::val_type> Graph_adj_list<directed>::fill_in_order () const {
+	int size = al.size();
+	vec_vis visits(size, false);
+	std::vector<val_type> res;
+
+	for (val_type u = 0; u < size; ++u) {
+		if (!visits[u]) {
+			_fill_in_order(u, visits, res);
+		}
+	}
+	return res;
+}
+
+template <bool directed>
+void Graph_adj_list<directed>::_fill_in_order (val_type u, vec_vis& visits, std::vector<val_type>& res) const {
 	visits[u] = true;
-	for (int v : al[u]) {
+	for (val_type v : al[u]) {
+		if (!visits[v]) {
+			_fill_in_order(v, visits, res);
+		}
+	}
+	res.push_back(u);
+}
+
+template <bool directed>
+void Graph_adj_list<directed>::_dfs_helper (val_type u, vec_vis& visits) const {
+	visits[u] = true;
+	for (val_type v : al[u]) {
 		if (!visits[v]) _dfs_helper(v, visits);
 	}
 }
