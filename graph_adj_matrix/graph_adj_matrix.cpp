@@ -278,6 +278,30 @@ std::vector<int> Graph_adj_matrix<directed>::top_sort () const { // Kahn's algor
 }
 
 template <bool directed>
+int Graph_adj_matrix<directed>::components_number () const {
+	int size = am.size();
+	vec_vis visits(size, false);
+	int components = 0;
+
+	for (int u = 0; u < size; ++u) {
+		if (!visits[u]) {
+			_dfs_helper(u, visits);
+			++components;
+		}
+	}
+
+	return components;
+}
+
+template <bool directed>
+void Graph_adj_matrix<directed>::_dfs_helper (int u, vec_vis& visits) const {
+	visits[u] = true;
+	for (int v = 0; v < am.size(); ++v) {
+		if (!visits[v] && am[u][v] == 1) _dfs_helper(v, visits);
+	}
+}
+
+template <bool directed>
 void Graph_adj_matrix<directed>::print () const {
     int size = am.size();
 

@@ -241,7 +241,7 @@ std::vector<int> Graph_adj_list<directed>::top_sort () const { // Kahn's algorit
     int size = al.size();
     int u;
     std::vector<int> res;
-    std::vector<int> in_degree(size, 0);
+    std::vector<int> in_degree(size, 0); // how many nodes coming in indexes node
     std::queue<int> q;
 
     for (u = 0; u < size; ++u) {
@@ -269,10 +269,29 @@ std::vector<int> Graph_adj_list<directed>::top_sort () const { // Kahn's algorit
     return res;
 }
 
-// template <bool directed>
-// void Graph_adj_list<directed>::_top_sort () const {
+template <bool directed>
+int Graph_adj_list<directed>::components_number () const {
+	int size = al.size();
+	int components = 0;
 
-// }
+	vec_vis visits(size, false);
+	for (int u = 0; u < size; ++u) {
+		if (!visits[u]) {
+			_dfs_helper(u, visits);
+			++components;
+		}
+	}
+	
+	return components;
+}
+
+template <bool directed>
+void Graph_adj_list<directed>::_dfs_helper (int u, vec_vis& visits) const {
+	visits[u] = true;
+	for (int v : al[u]) {
+		if (!visits[v]) _dfs_helper(v, visits);
+	}
+}
 
 template <bool directed>
 void Graph_adj_list<directed>::print () const {

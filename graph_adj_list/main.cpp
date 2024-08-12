@@ -21,7 +21,6 @@ int main () {
         {2, 4},
         {2, 5},
         {3, 7},
-        {6, 8},
         {7, 6},
     };
 
@@ -52,28 +51,26 @@ int main () {
         {7, 0},
     };
 
-    graph gr(edges_max(cycled_edges_2), cycled_edges_2);
+	vector<vector<int>> multi_comp = {
+		{0, 1},
+		{1, 2},
+		{3, 4},
+		{4, 5},
+		{6, 7},
+		{8, 9},
+	};
+
+    graph gr(edges_max(multi_comp), multi_comp);
     gr.print();
     std::cout << '\n';
-    // gr.bfs([](const int val){std::cout << val << ' ';});
-    // vector<int> res = gr.shortest_path(4,0);
 
-    // for (int i = 0; i < res.size(); ++i) {
-    //     std::cout << res[i];
-    //     if ((i + 1) != res.size()) std::cout << " -> ";
-    // }
+	// vector<vector<int>> all_paths = gr.find_all_paths(0, edges_max(edges_2));
 
-	// Graph_adj_list::list res = gr.find_all_paths(1,3);
-
-	// for (const auto& row : res) {
+	// for (vector<int>& row : all_paths) {
 	// 	print_path(row);
 	// 	std::cout << '\n';
 	// }
-	// std::vector<int> level = gr.curr_levels_vertexes(0, 2);
-	// for (int val : level) {
-	// 	std::cout << val << ' ';
-	// }
-	// std::cout << '\n';
+
 	std::cout << std::boolalpha << gr.is_cycled() << std::endl;
     auto res = gr.top_sort();
 

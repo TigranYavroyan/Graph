@@ -32,12 +32,15 @@ public:
     std::vector<int> shortest_path (int u, int v) const;
 	bool is_cycled () const;
     std::vector<int> top_sort () const;
+	int components_number () const;
 
     void print () const;
 private:
     matrix am; // adj_matrix
 
 	void _find_all_paths (int u, int v, matrix& res, std::vector<int>& sub_res, vec_vis& visits) const;
+
+	void _dfs_helper (int u, vec_vis& visits) const;
 
     template <typename func>
     void _dfs (int u, vec_vis& visits, func f);

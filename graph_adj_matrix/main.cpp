@@ -126,8 +126,19 @@ int main () {
         {7, 0},
     };
 
-    graph gr(edges_max(edges_1), edges_1);
+	vector<vector<int>> multi_comp = {
+		{0, 1},
+		{1, 2},
+		{3, 4},
+		{4, 5},
+		{6, 7},
+		{8, 9},
+	};
+
+    graph gr(edges_max(cycled_edges_1), cycled_edges_1);
     gr.print();
+
+	std::cout << "components number: " << gr.components_number() << std::endl;
     // gr.bfs([](const int val){std::cout << val << ' ';});
 
     // print_path(gr.shortest_path(0, 5));
