@@ -22,7 +22,7 @@ void Graph_adj_matrix<directed>::add_edge (int u, int v) {
 
     am[u][v] = 1;
     if (!directed)
-        am[v][u] = 1; // if undirected
+        am[v][u] = 1;
 }
 
 template <bool directed>
@@ -102,6 +102,22 @@ void Graph_adj_matrix<directed>::bfs (func f, int u) {
 }
 
 template <bool directed>
+void Graph_adj_matrix<directed>::transpose () {
+	if (!directed) {
+		std::cout << "Can't transpose the undirected graph\n";
+		return;
+	}
+
+	int size = am.size();
+
+	for (int i = 0; i < size; ++i) {
+		for (int j = i + 1; j < size; ++j) {
+			std::swap(am[i][j], am[j][i]);
+		}
+	}
+}
+
+template <bool directed>
 typename Graph_adj_matrix<directed>::matrix Graph_adj_matrix<directed>::find_all_paths (int u, int v) const {
 	if (u == v)
 		return matrix();
@@ -171,7 +187,7 @@ std::vector<int> Graph_adj_matrix<directed>::shortest_path (int u, int v) const 
 }
 
 template <bool directed>
-std::vector<int> Graph_adj_matrix<directed>::curr_levels_vertexes (int u, int level) {
+std::vector<int> Graph_adj_matrix<directed>::curr_levels_vertexes (int u, int level) const {
 	if (u >= am.size() || level < 0)
 		throw std::out_of_range("Out of range");
 

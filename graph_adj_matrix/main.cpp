@@ -137,8 +137,8 @@ int main () {
 
     graph gr(edges_max(cycled_edges_1), cycled_edges_1);
     gr.print();
-
-	std::cout << "components number: " << gr.components_number() << std::endl;
+	gr.transpose();
+	gr.print();
     // gr.bfs([](const int val){std::cout << val << ' ';});
 
     // print_path(gr.shortest_path(0, 5));
@@ -149,20 +149,20 @@ int main () {
 	// 	std::cout << '\n';
 	// }
 
-	// std::vector<int> level = gr.curr_levels_vertexes(0, 1);
+	// std::vector<int> level = gr.curr_levels_vertexes(0, 2);
 	// for (int val : level) {
 	// 	std::cout << val << ' ';
 	// }
 	// std::cout << '\n';
 
-	std::cout << std::boolalpha << gr.is_cycled() << std::endl;
-    auto res = gr.top_sort();
+	// std::cout << std::boolalpha << gr.is_cycled() << std::endl;
+    // auto res = gr.top_sort();
 
-    if (res.empty()) std::cout << "top sort nema" << std::endl;
-    else {
-        for (auto val : res) {
-            std::cout << val << ' ';
-        }
-        std::cout << '\n';
-    }
+    // if (res.empty()) std::cout << "top sort nema" << std::endl;
+    // else {
+    //     for (auto val : res) {
+    //         std::cout << val << ' ';
+    //     }
+    //     std::cout << '\n';
+    // }
 }

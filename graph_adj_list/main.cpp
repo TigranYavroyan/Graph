@@ -51,7 +51,7 @@ int main () {
         {7, 0},
     };
 
-	vector<vector<int>> multi_comp = {
+	vector<vector<int>> multi_components = {
 		{0, 1},
 		{1, 2},
 		{3, 4},
@@ -60,9 +60,12 @@ int main () {
 		{8, 9},
 	};
 
-    graph gr(edges_max(multi_comp), multi_comp);
+    graph gr(edges_max(cycled_edges_2), cycled_edges_2);
     gr.print();
     std::cout << '\n';
+	gr.transpose();
+	gr.print();
+	std::cout << '\n';
 
 	// vector<vector<int>> all_paths = gr.find_all_paths(0, edges_max(edges_2));
 
@@ -71,13 +74,13 @@ int main () {
 	// 	std::cout << '\n';
 	// }
 
-	std::cout << std::boolalpha << gr.is_cycled() << std::endl;
-    auto res = gr.top_sort();
+	// std::cout << std::boolalpha << gr.is_cycled() << std::endl;
+    // auto res = gr.top_sort();
 
-    if (res.empty()) std::cout << "top sort nema" << std::endl;
-    else {
-        for (auto val : res) {
-            std::cout << val << ' ';
-        }
-    }
+    // if (res.empty()) std::cout << "top sort nema" << std::endl;
+    // else {
+    //     for (auto val : res) {
+    //         std::cout << val << ' ';
+    //     }
+    // }
 }

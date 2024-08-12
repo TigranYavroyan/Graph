@@ -93,7 +93,23 @@ void Graph_adj_list<directed>::bfs (func f, int u) {
         }
         std::cout << '\n';
     }
+}
 
+template <bool directed>
+void Graph_adj_list<directed>::transpose () {
+	if (!directed) {
+		std::cout << "Can't transpose the undirected graph\n";
+	}
+	int size = al.size();
+	list new_al(size, std::vector<int>(0, 0));
+
+	for (int i = 0; i < size; ++i) {
+		for (int j = 0; j < al[i].size(); ++j) {
+			new_al[al[i][j]].push_back(i);
+		}
+	}
+
+	al = new_al;
 }
 
 template <bool directed>
@@ -281,7 +297,7 @@ int Graph_adj_list<directed>::components_number () const {
 			++components;
 		}
 	}
-	
+
 	return components;
 }
 

@@ -20,6 +20,8 @@ public:
     void add_edge (int u, int v);
     void add_vertex ();
 
+	void transpose ();
+
     template <typename func>
     void dfs (func f, int u = 0);
 
@@ -31,7 +33,7 @@ public:
     std::vector<int> shortest_path (int u, int v) const; // unweighted graph
 	bool is_cycled () const;
     std::vector<int> top_sort () const;
-	int components_number () const;
+	int components_number () const; // can be stored in variable and counted once at ctoring
 
     void print () const;
 private:

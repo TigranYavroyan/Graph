@@ -27,12 +27,14 @@ public:
     template <typename func>
     void bfs (func f, int u = 0);
 
-	std::vector<int> curr_levels_vertexes (int u, int level);
+	void transpose ();
+
+	std::vector<int> curr_levels_vertexes (int u, int level) const;
 	matrix find_all_paths (int u, int v) const;
     std::vector<int> shortest_path (int u, int v) const;
 	bool is_cycled () const;
     std::vector<int> top_sort () const;
-	int components_number () const;
+	int components_number () const; // can be stored in variable and counted once at ctoring
 
     void print () const;
 private:
