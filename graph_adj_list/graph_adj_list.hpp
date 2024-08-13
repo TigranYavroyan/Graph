@@ -64,6 +64,6 @@ private:
 
 };
 
-#include "graph_adj_list.cpp"
+#include "graph_adj_list_header.hpp"
 
 #endif // GRAPH_ADJ_LIST_HPP

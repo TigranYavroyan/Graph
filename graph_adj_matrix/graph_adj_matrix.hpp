@@ -34,7 +34,6 @@ public:
 
 	void transpose ();
 	Graph_adj_matrix<directed> clone_transpose() const;
-	// add clone_transpose with returning new graph;
 
 	std::vector<int> curr_levels_vertexes (int u, int level) const;
 	matrix find_all_paths (int u, int v) const;
@@ -60,6 +59,6 @@ private:
 	void _find_scc(int u, vec_vis& visited, std::vector<int>& component) const;
 };
 
-#include "graph_adj_matrix.cpp"
+#include "graph_adj_matrix_header.hpp"
 
 #endif // GRAPH_ADJ_MATRIX_HPP
