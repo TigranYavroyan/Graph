@@ -16,6 +16,17 @@ Graph_adj_matrix<directed>::Graph_adj_matrix(int n, int (*matrix)[2], int size) 
 }
 
 template <bool directed>
+Graph_adj_matrix<directed>::Graph_adj_matrix (const matrix& _am) : am{_am} {}
+
+template <bool directed>
+Graph_adj_matrix<directed>::Graph_adj_matrix (const Graph_adj_matrix<directed>& other) : am{other.am} {}
+
+template <bool directed>
+Graph_adj_matrix<directed>::Graph_adj_matrix (Graph_adj_matrix<directed>&& other) : am{other.am} {
+	other.am.clear();
+}
+
+template <bool directed>
 void Graph_adj_matrix<directed>::add_edge (int u, int v) {
     if (u >= am.size() || v >= am.size())
         throw std::out_of_range("Out of range");
@@ -115,6 +126,24 @@ void Graph_adj_matrix<directed>::transpose () {
 			std::swap(am[i][j], am[j][i]);
 		}
 	}
+}
+
+template <bool directed>
+Graph_adj_matrix<directed> Graph_adj_matrix<directed>::clone_transpose () const {
+	if (!directed) {
+		throw std::invalid_argument("Can't transpose the undirected graph");
+	}
+
+	int size = am.size();
+	matrix new_am = am;
+
+	for (int i = 0; i < size; ++i) {
+		for (int j = i + 1; j < size; ++j) {
+			std::swap(new_am[i][j], new_am[j][i]);
+		}
+	}
+
+	return Graph_adj_matrix(new_am);
 }
 
 template <bool directed>
@@ -307,6 +336,59 @@ int Graph_adj_matrix<directed>::components_number () const {
 	}
 
 	return components;
+}
+
+template <bool directed>
+typename Graph_adj_matrix<directed>::matrix Graph_adj_matrix<directed>::find_sccs () const {
+	int size = am.size();
+	std::stack<int> st;
+	vec_vis visits(size, false);
+
+	for (int u = 0; u < size; ++u) {
+		if (!visits[u])
+			_fill_in_order(u, visits, st);
+	}
+
+	fill(visits.begin(), visits.end(), false);
+
+	Graph_adj_matrix<directed> other = this->clone_transpose();
+	matrix sccs;
+	std::vector<int> component;
+
+	while (!st.empty()) {
+		int u = st.top();
+		st.pop();
+
+		if (!visits[u]) {
+			other._find_scc(u, visits, component);
+			sccs.push_back(std::move(component));
+		}
+	}
+
+	return sccs;
+}
+
+template <bool directed>
+void Graph_adj_matrix<directed>::_fill_in_order (int u, vec_vis& visits, std::stack<int>& st) const {
+	visits[u] = true;
+
+	for (int v = 0; v < am.size(); ++v) {
+		if (!visits[v] && am[u][v] == 1)
+			_fill_in_order(v, visits, st);
+	}
+
+	st.push(u);
+}
+
+template <bool directed>
+void Graph_adj_matrix<directed>::_find_scc (int u, vec_vis& visits, std::vector<int>& component) const {
+	visits[u] = true;
+	component.push_back(u);
+
+	for (int v = 0; v < am.size(); ++v) {
+		if (!visits[v] && am[u][v] == 1)
+			_find_scc (v, visits, component);
+	}
 }
 
 template <bool directed>

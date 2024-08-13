@@ -60,7 +60,7 @@ int main () {
 		{8, 9},
 	};
 
-	vector<vector<int>> for_scc = {
+	vector<vector<int>> for_scc_1 = {
 		{0, 1},
 		{1, 2},
 		{1, 4},
@@ -75,15 +75,56 @@ int main () {
 		{6, 2},
 	};
 
-    graph gr(edges_max(for_scc), for_scc);
+	vector<vector<int>> for_scc_2 = {
+		{0, 1},
+		{1, 2},
+	};
+
+	vector<vector<int>> for_scc_3 = {
+		{0, 1},
+		{1, 2},
+		{2, 3},
+		{3, 0},
+		{3, 4},
+		{4, 5},
+		{5, 4},
+		{5, 6},
+		{6, 7},
+		{7, 8},
+		{8, 9},
+		{9, 10},
+		{10, 6},
+	};
+
+	vector<vector<int>> for_scc_4 = {
+		{0, 1},
+		{1, 2},
+		{2, 0},
+		{2, 3},
+	};
+
+	// just transposing and passing dfs is not working for this case
+	vector<vector<int>> for_scc_5 = { // so we are using Kosarajou's argorithm
+		{0, 1},
+		{1, 2},
+		{1, 3},
+		{2, 0},
+		{3, 4},
+		{4, 5},
+		{5, 3},
+		{6, 5},
+		{6, 7},
+		{7, 6},
+	};
+
+    graph gr(edges_max(for_scc_3), for_scc_3);
     gr.print();
-    endl();
-	print_path(gr.fill_in_order());
-    endl(2);
-	gr.transpose         ();
-    gr.print();
-    endl();
-	print_path(gr.fill_in_order());
+	endl();
+	vector<vector<int>> res = gr.find_sccs();
+	for (const auto& row : res) {
+		print_path(row);
+		endl();
+	}
 	// gr.transpose();
 	// gr.print();
 	// endl();

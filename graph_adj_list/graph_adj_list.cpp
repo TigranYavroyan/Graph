@@ -14,6 +14,17 @@ Graph_adj_list<directed>::Graph_adj_list (int n, val_type (*edges)[2], int size)
 }
 
 template <bool directed>
+Graph_adj_list<directed>::Graph_adj_list (const list& _al) : al{_al} {}
+
+template <bool directed>
+Graph_adj_list<directed>::Graph_adj_list (const Graph_adj_list<directed>& other) : al{other.al} {}
+
+template <bool directed>
+Graph_adj_list<directed>::Graph_adj_list (Graph_adj_list<directed>&& other) : al{other.al} {
+	other.al.clear();
+}
+
+template <bool directed>
 void Graph_adj_list<directed>::add_edge (val_type u, val_type v) {
     if (u >= al.size() || v >= al.size())
         throw std::out_of_range("Out of range");
@@ -96,10 +107,29 @@ void Graph_adj_list<directed>::bfs (func f, val_type u) {
 }
 
 template <bool directed>
+Graph_adj_list<directed> Graph_adj_list<directed>::clone_transpose () const {
+	if (!directed) {
+		throw std::invalid_argument("can't transpose the undirected graph");
+	}
+
+	int size = al.size();
+	list new_al(size, std::vector<val_type>(0, 0));
+
+	for (int i = 0; i < size; ++i) {
+		for (int j = 0; j < al[i].size(); ++j) {
+			new_al[al[i][j]].push_back(i);
+		}
+	}
+
+	return Graph_adj_list(new_al);
+}
+
+template <bool directed>
 void Graph_adj_list<directed>::transpose () {
 	if (!directed) {
-		std::cout << "Can't transpose the undirected graph\n";
+		throw std::invalid_argument("can't transpose the undirected graph");
 	}
+
 	int size = al.size();
 	list new_al(size, std::vector<val_type>(0, 0));
 
@@ -302,28 +332,58 @@ int Graph_adj_list<directed>::components_number () const {
 }
 
 template <bool directed>
-std::vector<typename Graph_adj_list<directed>::val_type> Graph_adj_list<directed>::fill_in_order () const {
-	int size = al.size();
-	vec_vis visits(size, false);
-	std::vector<val_type> res;
+void Graph_adj_list<directed>::_fill_in_order(int u, vec_vis& visits, std::stack<typename Graph_adj_list<directed>::val_type>& st) const {
+	visits[u] = true;
 
-	for (val_type u = 0; u < size; ++u) {
-		if (!visits[u]) {
-			_fill_in_order(u, visits, res);
-		}
+	for (auto v : al[u]) {
+		if (!visits[v])
+			_fill_in_order(v, visits, st);
 	}
-	return res;
+
+	st.push(u);
 }
 
 template <bool directed>
-void Graph_adj_list<directed>::_fill_in_order (val_type u, vec_vis& visits, std::vector<val_type>& res) const {
+void Graph_adj_list<directed>::_find_scc(int u, vec_vis& visits, std::vector<typename Graph_adj_list<directed>::val_type>& component) const {
 	visits[u] = true;
-	for (val_type v : al[u]) {
+	component.push_back(u);
+
+	for (auto v : al[u]) {
+		if (!visits[v])
+			_find_scc(v, visits, component);
+	}
+}
+
+template <bool directed>
+typename Graph_adj_list<directed>::list Graph_adj_list<directed>::find_sccs() const {
+	std::stack<val_type> st;
+	int size = al.size();
+
+	vec_vis visits(size, false);
+
+	for (int i = 0; i < size; i++)
+		if (!visits[i])
+			_fill_in_order(i, visits, st);
+
+	Graph_adj_list<directed> gr = clone_transpose();
+
+	fill(visits.begin(), visits.end(), false);
+
+	list sccs;
+	std::vector<val_type> component;
+
+	while (!st.empty()) {
+		int v = st.top();
+		st.pop();
+
+
 		if (!visits[v]) {
-			_fill_in_order(v, visits, res);
+			gr._find_scc(v, visits, component);
+			sccs.push_back(std::move(component));
 		}
 	}
-	res.push_back(u);
+
+	return sccs;
 }
 
 template <bool directed>
@@ -351,10 +411,18 @@ void Graph_adj_list<directed>::print () const {
 }
 
 template <bool directed>
-bool Graph_adj_list<directed>::_not_same_vals (int i, int val) const {
+bool Graph_adj_list<directed>::_not_same_vals (int i, val_type val) const {
     for (int u : al[i]) {
         if (u == val)
             return false;
     }
     return true;
+}
+
+template <bool directed>
+void Graph_adj_list<directed>::print_vec (const std::vector<val_type>& vec) const {
+	for (const auto& val : vec) {
+		std::cout << val << ' ';
+	}
+	std::cout << '\n';
 }
