@@ -41,7 +41,7 @@ public:
 	bool is_cycled () const;
     std::vector<int> top_sort () const;
 	int components_number () const; // can be stored in variable and counted once at ctoring
-	matrix find_sccs () const;
+	matrix find_sccs_kosarajou () const;
 
     void print () const;
 private:

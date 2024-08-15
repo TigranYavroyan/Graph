@@ -2,7 +2,7 @@
 #define FIND_SCCS_HPP
 
 template <bool directed>
-typename Graph_adj_matrix<directed>::matrix Graph_adj_matrix<directed>::find_sccs () const {
+typename Graph_adj_matrix<directed>::matrix Graph_adj_matrix<directed>::find_sccs_kosarajou () const {
 	int size = am.size();
 	std::stack<int> st;
 	vec_vis visits(size, false);

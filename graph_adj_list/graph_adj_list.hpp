@@ -13,6 +13,7 @@ public:
 	using val_type = int;
     using list = std::vector<std::vector<val_type>>;
     using vec_vis = std::vector<bool>;
+    using vec_i = std::vector<int>;
 public:
     Graph_adj_list (int n, const list& edges);
 	Graph_adj_list (const list& al);
@@ -40,7 +41,8 @@ public:
 	bool is_cycled () const;
     std::vector<val_type> top_sort () const;
 	int components_number () const; // can be stored in variable and counted once at ctoring
-	list find_sccs() const;
+	list find_sccs_kosarajou () const;
+    list find_sccs_tarjan () const;
 
     void print () const;
 
@@ -59,8 +61,10 @@ private:
 
 	void print_vec(const std::vector<val_type>& vec) const;
 
-	void _fill_in_order(int u, vec_vis& visited, std::stack<val_type>& st) const;
-	void _find_scc(int u, vec_vis& visited, std::vector<val_type>& component) const;
+	void _fill_in_order(int u, vec_vis& visited, std::stack<val_type>& st) const; // Kosarajou
+	void _find_scc(int u, vec_vis& visited, std::vector<val_type>& component) const; // Kosarajou
+
+    void _find_scc_tarjan (val_type u, vec_i& ids, vec_i& low_link, vec_vis& in_stack, list& res, std::vector<val_type>& sub_res, std::stack<val_type>& st) const;
 
 };
 

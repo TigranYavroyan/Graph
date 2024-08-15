@@ -1,5 +1,5 @@
-#ifndef FIND_SCCS_HPP
-#define FIND_SCCS_HPP
+#ifndef FIND_SCCS_KOSARAJOU_HPP
+#define FIND_SCCS_KOSARAJOU_HPP
 
 template <bool directed>
 void Graph_adj_list<directed>::_fill_in_order(int u, vec_vis& visits, std::stack<typename Graph_adj_list<directed>::val_type>& st) const {
@@ -25,7 +25,7 @@ void Graph_adj_list<directed>::_find_scc(int u, vec_vis& visits, std::vector<typ
 }
 
 template <bool directed>
-typename Graph_adj_list<directed>::list Graph_adj_list<directed>::find_sccs() const {
+typename Graph_adj_list<directed>::list Graph_adj_list<directed>::find_sccs_kosarajou() const {
 	std::stack<val_type> st;
 	int size = al.size();
 
@@ -56,4 +56,4 @@ typename Graph_adj_list<directed>::list Graph_adj_list<directed>::find_sccs() co
 	return sccs;
 }
 
-#endif // FIND_SCCS_HPP
+#endif // FIND_SCCS_KOSARAJOU_HPP

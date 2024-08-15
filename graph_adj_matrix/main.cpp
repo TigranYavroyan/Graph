@@ -194,7 +194,7 @@ int main () {
     graph gr(edges_max(for_scc_5), for_scc_5);
     gr.print();
 	endl();
-	auto res = gr.find_sccs();
+	auto res = gr.find_sccs_kosarajou();
 	for (auto row : res) {
 		print_path(row);
 		endl();
