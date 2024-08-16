@@ -42,6 +42,7 @@ public:
     std::vector<int> top_sort () const;
 	int components_number () const; // can be stored in variable and counted once at ctoring
 	matrix find_sccs_kosarajou () const;
+	matrix find_sccs_tarjan () const;
 
     void print () const;
 private:
@@ -55,8 +56,10 @@ private:
     void _dfs (int u, vec_vis& visits, func f);
 	bool _is_cycled (int u, vec_vis& visits, vec_vis& in_stack, int parent) const;
 
-	void _fill_in_order(int u, vec_vis& visited, std::stack<int>& st) const;
-	void _find_scc(int u, vec_vis& visited, std::vector<int>& component) const;
+	void _fill_in_order (int u, vec_vis& visited, std::stack<int>& st) const;
+	void _find_scc (int u, vec_vis& visited, std::vector<int>& component) const;
+
+	void _find_sccs_tarjan (int u, vec_vis& in_stack, std::stack<int>& st, std::vector<int>& ids, std::vector<int>& low_link, matrix& res, std::vector<int>& sub_res) const;
 };
 
 #include "graph_adj_matrix_header.hpp"

@@ -191,11 +191,33 @@ int main () {
 		{7, 6},
 	};
 
-    graph gr(edges_max(for_scc_5), for_scc_5);
+	// Tarjan's example
+	vector<vector<int>> for_scc_6 = {
+		{0, 1},
+		{1, 2},
+		{1, 4},
+		{1, 6},
+		{2, 3},
+		{3, 2},
+		{3, 5},
+		{4, 5},
+		{4, 7},
+		{5, 4},
+		{6, 0},
+		{6, 2},
+	};
+
+    graph gr(edges_max(for_scc_6), for_scc_6);
     gr.print();
 	endl();
 	auto res = gr.find_sccs_kosarajou();
 	for (auto row : res) {
+		print_path(row);
+		endl();
+	}
+	auto res2 = gr.find_sccs_tarjan();
+	endl();
+	for (auto row : res2) {
 		print_path(row);
 		endl();
 	}

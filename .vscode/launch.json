@@ -8,7 +8,7 @@
 			"type": "lldb",
 			"request": "launch",
 			"name": "Debug",
-			"program": "${workspaceFolder}/graph_adj_list/a.out",
+			"program": "${workspaceFolder}/graph_adj_matrix/a.out",
 			"args": [],
 			"cwd": "${workspaceFolder}"
 		}
