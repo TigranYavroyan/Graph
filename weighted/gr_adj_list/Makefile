@@ -9,7 +9,7 @@ EXEC = ./a.out
 all: $(EXEC)
 
 $(EXEC) : $(MAIN) $(HELPERS)
-	$(CC) $(CFLAGS) -g -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
 	rm -f *.o

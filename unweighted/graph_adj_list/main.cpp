@@ -117,7 +117,7 @@ int main () {
 		{7, 6},
 	};
 
-	// Tarjan's example 
+	// Tarjan's example
 	vector<vector<int>> for_scc_6 = {
 		{0, 1},
 		{1, 2},
@@ -133,14 +133,25 @@ int main () {
 		{6, 2},
 	};
 
-    graph gr(edges_max(for_scc_6), for_scc_6);
+	vector<vector<int>> test = {
+		{0, 1},
+		{1, 0},
+		{2, 3},
+		{3, 4},
+		{3, 5},
+		{5, 6},
+	};
+
+    graph gr(edges_max(test), test);
     gr.print();
 	endl();
-	vector<vector<int>> res = gr.find_sccs_tarjan();
-	for (const auto& row : res) {
-		print_path(row);
-		endl();
-	}
+	std::cout << std::boolalpha <<  gr.is_cycled() << std::endl;
+	// endl();
+	// vector<vector<int>> res = gr.find_sccs_tarjan();
+	// for (const auto& row : res) {
+	// 	print_path(row);
+	// 	endl();
+	// }
 	// gr.transpose();
 	// gr.print();
 	// endl();
