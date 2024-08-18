@@ -17,8 +17,27 @@ public:
 	Graph_al (const Graph_al& other);
 	Graph_al (Graph_al&& other);
 
-private:
+	~Graph_al () = default;
+public:
+	void add_edge (int u, int v, int weight);
+	void add_vertex ();
 
+	template <typename func>
+	void dfs (func f);
+
+	template <typename func>
+	void bfs (func f);
+
+	void print () const;
+private:
+	list al;
+
+	bool _not_same_vals (int u, int v) const;
+
+	template <typename func>
+	void _dfs (int u, vec_vis& visits, func f);
+
+	void _dfs_helper (int u, vec_vis& visits);
 };
 
 #include "gr_adj_list_header.hpp"
