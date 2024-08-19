@@ -4,6 +4,9 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <queue>
+#include <stack>
+#include <algorithm>
 
 template <bool directed>
 class Graph_al {
@@ -12,7 +15,7 @@ public:
 	using list = std::vector<std::vector<std::pair<int, int>>>;
 	using vec_vis = std::vector<bool>;
 public:
-	Graph_al (int n, vec_2d& edges);
+	Graph_al (int n, const vec_2d& edges);
 	Graph_al (const list& adj_list);
 	Graph_al (const Graph_al& other);
 	Graph_al (Graph_al&& other);
@@ -23,12 +26,19 @@ public:
 	void add_vertex ();
 
 	template <typename func>
-	void dfs (func f);
+	void dfs (func f, int u = 0);
 
 	template <typename func>
-	void bfs (func f);
+	void bfs (func f, int u = 0);
 
+	void transpose ();
+
+	std::vector<int> top_sort () const;
+	vec_2d find_sccs_kosarajou () const;
+	vec_2d find_sccs_tarjan () const;
+	Graph_al<directed> clone_transpose () const;
 	void print () const;
+
 private:
 	list al;
 
@@ -38,6 +48,9 @@ private:
 	void _dfs (int u, vec_vis& visits, func f);
 
 	void _dfs_helper (int u, vec_vis& visits);
+
+	void _fill_in_order (int u, vec_vis& visits, std::stack<int>& st) const;
+	void _find_scc (int u, vec_vis& visits, std::vector<int>& component) const;
 };
 
 #include "gr_adj_list_header.hpp"

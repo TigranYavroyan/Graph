@@ -25,7 +25,16 @@ int main () {
 	};
 
 	Graph gr(edges_max(edges_2), edges_2);
+	gr.add_edge(5, 0, 12);
 	gr.print();
 	endl();
-	gr.dfs([](const int val){std::cout << val << ' ';});
+
+	auto res = gr.find_sccs_kosarajou();
+
+	for (auto& row : res) {
+		print_path(row);
+		endl();
+	}
+	endl();
+
 }

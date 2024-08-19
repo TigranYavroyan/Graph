@@ -3,13 +3,13 @@
 
 template <bool directed>
 template <typename func>
-void Graph_al<directed>::dfs (func f) {
+void Graph_al<directed>::dfs (func f, int u) {
 	int size = al.size();
 	vec_vis visits(size, false);
 
-	for (int u = 0; u < size; ++u) {
-		if (!visits[u])
-			_dfs(u, visits, f);
+	for (int _u = u; _u < size; ++_u) {
+		if (!visits[_u])
+			_dfs(_u, visits, f);
 	}
 }
 
