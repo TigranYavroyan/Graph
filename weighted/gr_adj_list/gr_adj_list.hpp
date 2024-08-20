@@ -7,6 +7,7 @@
 #include <queue>
 #include <stack>
 #include <algorithm>
+#include <limits>
 
 template <bool directed>
 class Graph_al {
@@ -37,6 +38,7 @@ public:
 	vec_2d find_sccs_kosarajou () const;
 	vec_2d find_sccs_tarjan () const;
 	Graph_al<directed> clone_transpose () const;
+	std::vector<double> sssp_top_sort (int src = 0) const;
 	void print () const;
 
 private:
@@ -51,6 +53,8 @@ private:
 
 	void _fill_in_order (int u, vec_vis& visits, std::stack<int>& st) const;
 	void _find_scc (int u, vec_vis& visits, std::vector<int>& component) const;
+	void _find_scc_tarjan (int u, vec_vis& in_stack, std::vector<int>& ids, std::vector<int>& low_link, std::stack<int>& st, vec_2d& res) const;
+	void _dfs_sssp (int u, std::vector<double>& dist) const;
 };
 
 #include "gr_adj_list_header.hpp"

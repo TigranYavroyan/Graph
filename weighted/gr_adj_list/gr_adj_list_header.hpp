@@ -10,5 +10,6 @@
 #include "find_sccs_kosarajou.hpp"
 #include "find_sccs_tarjan.hpp"
 #include "transpose.hpp"
+#include "SSSP_top_sort.hpp"
 
 #endif // GR_ADJ_LIST_HEADER_HPP
