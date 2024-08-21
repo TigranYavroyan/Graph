@@ -23,7 +23,7 @@ std::vector<int> Graph_al<directed>::sssp_djikstra (int src, int dst) const {
 
 	while (!q.empty()) {
 		auto [u, cost] = q.top(); q.pop();
-		// if I found more efficient way to achieve u than cost , just skip it
+		// if I found more efficient way to achieve u, I don't need to track more expensive way
 		if (dist[u] < cost) continue; // optimization
 
 		for (auto [v, c] : al[u]) {
