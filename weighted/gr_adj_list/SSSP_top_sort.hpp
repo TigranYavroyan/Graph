@@ -1,12 +1,16 @@
 #ifndef SSSP_TOP_SORT
 #define SSSP_TOP_SORT
 
+
+// this method can't track cycles , bcz of top_sort's logic
 template <bool directed>
 std::vector<int> Graph_al<directed>::sssp_top_sort (int src, int dst) const { // can work only with DAG
 	int size = al.size();
 
 	std::vector<double> dist(size, std::numeric_limits<double>::infinity());
 	std::vector<int> res = top_sort();
+	if (res.empty()) return res;
+
 	std::vector<int> paths(size, -1);
 
 	reverse(res.begin(), res.end());
@@ -30,19 +34,6 @@ void Graph_al<directed>::_dfs_sssp (std::vector<double>& dist, std::stack<int, s
 			}
 		}
 	}
-}
-
-template <bool directed>
-std::vector<int> Graph_al<directed>::_get_path (int u, int v, const std::vector<int>& paths) const {
-	std::vector<int> path;
-	while (v != u) {
-		path.push_back(v);
-		v = paths[v];
-	}
-	path.push_back(u);
-	reverse(path.begin(), path.end());
-
-	return path;
 }
 
 #endif // SSSP_TOP_SORT

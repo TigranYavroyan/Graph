@@ -1,9 +1,14 @@
 #include "helpers.h"
 
 void graph_utils::print_path (const std::vector<int>& path) {
-    for (int i = 0; i < path.size(); ++i) {
-        std::cout << path[i];
-        if ((i + 1) != path.size()) std::cout << " -> ";
+    if (path.empty()) {
+        std::cout << "The path is empty";
+    }
+    else {
+        for (int i = 0; i < path.size(); ++i) {
+            std::cout << path[i];
+            if ((i + 1) != path.size()) std::cout << " -> ";
+        }
     }
 }
 

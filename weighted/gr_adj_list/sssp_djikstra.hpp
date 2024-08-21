@@ -9,6 +9,7 @@ namespace {
 	};
 }
 
+// djikstra can't track negative cycles
 template <bool directed>
 std::vector<int> Graph_al<directed>::sssp_djikstra (int src, int dst) const {
 	std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, pair_cmp> q;
@@ -22,8 +23,8 @@ std::vector<int> Graph_al<directed>::sssp_djikstra (int src, int dst) const {
 
 	while (!q.empty()) {
 		auto [u, cost] = q.top(); q.pop();
-
-		if (dist[u] < cost) continue; // optimization , check later
+		// if I found more efficient way to achieve u than cost , just skip it
+		if (dist[u] < cost) continue; // optimization
 
 		for (auto [v, c] : al[u]) {
 			if (dist[v] > dist[u] + c) {
@@ -34,11 +35,7 @@ std::vector<int> Graph_al<directed>::sssp_djikstra (int src, int dst) const {
 		}
 	}
 
-	std::cout << '\n';
-	print_vec(_get_path(src, dst, paths));
-	std::cout << '\n';
-
-	return {};
+	return _get_path(src, dst, paths);
 }
 
 #endif // SSSP_DJIKSTRA

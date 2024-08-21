@@ -35,4 +35,20 @@ void Graph_al<directed>::print_vec (const std::vector<T>& vec) const {
 	std::cout << '\n';
 }
 
+template <bool directed>
+std::vector<int> Graph_al<directed>::_get_path (int u, int v, const std::vector<int>& paths) const {
+	std::vector<int> path;
+	while (v != u) {
+		if (paths[v] == -1)
+			return {};
+		path.push_back(v);
+		v = paths[v];
+	}
+	path.push_back(u);
+	reverse(path.begin(), path.end());
+
+	return path;
+}
+
+
 #endif // UTILS_HPP

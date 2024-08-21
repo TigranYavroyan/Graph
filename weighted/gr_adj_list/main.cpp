@@ -72,12 +72,27 @@ int main () {
 		{3, 4, 1},
 	};
 
-	Graph gr(edges_max(for_sssp), for_sssp);
+	vector<vector<int>> kormen = { // cycled
+		{0, 1, 10},
+		{0, 2, 5},
+		{1, 2, 2},
+		{1, 3, 1},
+		{2, 1, 3},
+		{2, 3, 9},
+		{2, 4, 2},
+		{3, 4, 4},
+		{4, 0, 7},
+		{4, 3, 6},
+		{5, 6, 2},
+	};
+
+	Graph gr(edges_max(kormen), kormen);
 	gr.print();
 	endl();
 
-	print_path(gr.sssp_top_sort(0, 7));
-
-	gr.sssp_djikstra(0, 7);
+	print_path(gr.sssp_top_sort(0, edges_max(kormen)));
+	endl();
+	print_path(gr.sssp_djikstra(0, edges_max(kormen)));
+	endl();
 
 }
