@@ -64,15 +64,20 @@ int main () {
 		{4, 3, 3},
 	};
 
+	vector<vector<int>> gpt = {
+		{0, 1, 1},
+		{1, 2, 1},
+		{1, 3, 3},
+		{2, 3, 1},
+		{3, 4, 1},
+	};
+
 	Graph gr(edges_max(for_sssp), for_sssp);
 	gr.print();
 	endl();
 
-	auto res = gr.sssp_top_sort();
+	print_path(gr.sssp_top_sort(0, 7));
 
-	for (auto val : res) {
-		std::cout << val << ' ';
-	}
-	endl();
+	gr.sssp_djikstra(0, 7);
 
 }

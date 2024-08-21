@@ -26,4 +26,13 @@ bool Graph_al<directed>::_not_same_vals (int u, int v) const {
 	return true;
 }
 
+template <bool directed>
+template <typename T>
+void Graph_al<directed>::print_vec (const std::vector<T>& vec) const {
+	for (auto val : vec) {
+		std::cout << val << ' ';
+	}
+	std::cout << '\n';
+}
+
 #endif // UTILS_HPP

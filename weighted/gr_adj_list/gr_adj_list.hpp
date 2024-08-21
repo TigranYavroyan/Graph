@@ -8,6 +8,7 @@
 #include <stack>
 #include <algorithm>
 #include <limits>
+#include <list>
 
 template <bool directed>
 class Graph_al {
@@ -27,10 +28,10 @@ public:
 	void add_vertex ();
 
 	template <typename func>
-	void dfs (func f, int u = 0);
+	void dfs (func f, int u = 0); // add checks for u or change operator[] to at()
 
 	template <typename func>
-	void bfs (func f, int u = 0);
+	void bfs (func f, int u = 0); // add checks for u or change operator[] to at()
 
 	void transpose ();
 
@@ -38,13 +39,17 @@ public:
 	vec_2d find_sccs_kosarajou () const;
 	vec_2d find_sccs_tarjan () const;
 	Graph_al<directed> clone_transpose () const;
-	std::vector<double> sssp_top_sort (int src = 0) const;
+	std::vector<int> sssp_top_sort (int src, int dst) const; // add checks or change operator[] to at()
+	std::vector<int> sssp_djikstra (int src, int dst) const; // add checks or change operator[] to at()
 	void print () const;
 
 private:
 	list al;
 
 	bool _not_same_vals (int u, int v) const;
+
+	template <typename T>
+	void print_vec(const std::vector<T>& vec) const;
 
 	template <typename func>
 	void _dfs (int u, vec_vis& visits, func f);
@@ -54,7 +59,8 @@ private:
 	void _fill_in_order (int u, vec_vis& visits, std::stack<int>& st) const;
 	void _find_scc (int u, vec_vis& visits, std::vector<int>& component) const;
 	void _find_scc_tarjan (int u, vec_vis& in_stack, std::vector<int>& ids, std::vector<int>& low_link, std::stack<int>& st, vec_2d& res) const;
-	void _dfs_sssp (int u, std::vector<double>& dist) const;
+	void _dfs_sssp (std::vector<double>& dist, std::stack<int, std::vector<int>>& st, std::vector<int>& paths) const;
+	std::vector<int> _get_path (int u, int v, const std::vector<int>& paths) const;
 };
 
 #include "gr_adj_list_header.hpp"
