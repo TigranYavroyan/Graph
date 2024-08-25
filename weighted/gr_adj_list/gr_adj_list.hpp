@@ -24,23 +24,24 @@ public:
 
 	~Graph_al () = default;
 public:
-	void add_edge (int u, int v, int weight);
-	void add_vertex ();
+	void add_edge (int u, int v, int weight); // ~0(1)
+	void add_vertex (); // ~0(1)
 
 	template <typename func>
-	void dfs (func f, int u = 0); // add checks for u or change operator[] to at()
+	void dfs (func f, int u = 0); // O(V + E)
 
 	template <typename func>
-	void bfs (func f, int u = 0); // add checks for u or change operator[] to at()
+	void bfs (func f, int u = 0); // O(V + E)
 
-	void transpose ();
+	void transpose ();  // O(V + E)
 
-	std::vector<int> top_sort () const;
-	vec_2d find_sccs_kosarajou () const;
-	vec_2d find_sccs_tarjan () const;
-	Graph_al<directed> clone_transpose () const;
-	std::vector<int> sssp_top_sort (int src, int dst) const; // add checks or change operator[] to at()
-	std::vector<int> sssp_djikstra (int src, int dst) const; // add checks or change operator[] to at()
+	std::vector<int> top_sort () const;  // O(V + E)
+	vec_2d find_sccs_kosarajou () const; // O(V + E) + O(V + E) + O(V + E)+ O(V)
+	vec_2d find_sccs_tarjan () const; // O(V + E)
+	Graph_al<directed> clone_transpose () const; // O(V + E)
+	std::vector<int> sssp_top_sort (int src, int dst) const; // O(V + E) + O(V + E)
+	std::vector<int> sssp_djikstra (int src, int dst) const; // O((V + E) * log V)
+	std::pair<std::vector<int>, bool> sssp_bellman_ford (int src, int dst) const; // O(V * (V + E)) + O(V * (V + E))
 	void print () const;
 
 private:
@@ -60,7 +61,9 @@ private:
 	void _find_scc (int u, vec_vis& visits, std::vector<int>& component) const;
 	void _find_scc_tarjan (int u, vec_vis& in_stack, std::vector<int>& ids, std::vector<int>& low_link, std::stack<int>& st, vec_2d& res) const;
 	void _dfs_sssp (std::vector<double>& dist, std::stack<int, std::vector<int>>& st, std::vector<int>& paths) const;
+	bool _relaxation (std::vector<double>& dist, int u, int v, int cost, std::vector<int>& path) const;
 	std::vector<int> _get_path (int u, int v, const std::vector<int>& paths) const;
+	bool _out_of_ranges  (int u) const;
 };
 
 #include "gr_adj_list_header.hpp"

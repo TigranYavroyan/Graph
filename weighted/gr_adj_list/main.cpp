@@ -83,16 +83,47 @@ int main () {
 		{3, 4, 4},
 		{4, 0, 7},
 		{4, 3, 6},
-		{5, 6, 2},
 	};
 
-	Graph gr(edges_max(kormen), kormen);
+	vector<vector<int>> neg_cyc = {
+		{0, 1, 1},
+		{1, 2, 1},
+		{2, 3, 1},
+		{3, 4, 1},
+		{4, 5, 1},
+		{5, 2, -5},
+		{4, 6, 1},
+	};
+
+	vector<vector<int>> test = {
+		{0, 1, 1},
+		{1, 2, 1},
+		{2, 3, 1},
+		{3, 4, 1},
+		{4, 2, -100},
+		{4, 5, 1},
+	};
+
+	vector<vector<int>> check = test;
+	int dst = edges_max(check);
+	int src = 0;
+
+	Graph gr(edges_max(check), check);
 	gr.print();
 	endl();
 
-	print_path(gr.sssp_top_sort(0, edges_max(kormen)));
+	print_path(gr.sssp_top_sort(src, dst));
 	endl();
-	print_path(gr.sssp_djikstra(0, edges_max(kormen)));
+	print_path(gr.sssp_djikstra(src, dst));
 	endl();
+	auto [res, flag] = gr.sssp_bellman_ford(src, dst);
 
+	if (flag) {
+		print_path(res);
+	}
+	else {
+		std::cout << "There is no path\n";
+		print_path(res);
+	}
+	endl();
 }

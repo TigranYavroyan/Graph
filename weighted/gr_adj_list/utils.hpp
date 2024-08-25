@@ -38,17 +38,34 @@ void Graph_al<directed>::print_vec (const std::vector<T>& vec) const {
 template <bool directed>
 std::vector<int> Graph_al<directed>::_get_path (int u, int v, const std::vector<int>& paths) const {
 	std::vector<int> path;
-	while (v != u) {
-		if (paths[v] == -1)
-			return {};
+	for (int i = 0; i < paths.size(); ++i) {
+		if (v == u) {
+			path.push_back(u);
+			reverse(path.begin(), path.end());
+
+			return path;
+		}
 		path.push_back(v);
 		v = paths[v];
 	}
-	path.push_back(u);
-	reverse(path.begin(), path.end());
 
-	return path;
+	return {};
 }
 
+template <bool directed>
+bool Graph_al<directed>::_relaxation (std::vector<double>& dist, int u, int v, int cost, std::vector<int>& paths) const {
+	if (dist[v] > dist[u] + cost) {
+		dist[v] = dist[u] + cost;
+		paths[v] = u;
+		return true;
+	}
+
+	return false;
+}
+
+template <bool directed>
+bool Graph_al<directed>::_out_of_ranges (int u) const {
+	return (u < 0 || u > (al.size() - 1));
+}
 
 #endif // UTILS_HPP

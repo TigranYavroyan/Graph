@@ -5,6 +5,9 @@
 // this method can't track cycles , bcz of top_sort's logic
 template <bool directed>
 std::vector<int> Graph_al<directed>::sssp_top_sort (int src, int dst) const { // can work only with DAG
+	if (_out_of_ranges(src) || _out_of_ranges(dst))
+		throw std::out_of_range("There is no vertexes (src or dst)");
+
 	int size = al.size();
 
 	std::vector<double> dist(size, std::numeric_limits<double>::infinity());
@@ -28,10 +31,7 @@ void Graph_al<directed>::_dfs_sssp (std::vector<double>& dist, std::stack<int, s
 		int top = st.top(); st.pop();
 
 		for (auto [v, c] : al[top]) {
-			if (dist[v] > dist[top] + c) { // relaxation
-				dist[v] = dist[top] + c;
-				paths[v] = top;
-			}
+			_relaxation(dist, top, v, c, paths);
 		}
 	}
 }

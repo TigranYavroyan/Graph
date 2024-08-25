@@ -4,6 +4,9 @@
 template <bool directed>
 template <typename func>
 void Graph_al<directed>::dfs (func f, int u) {
+	if (_out_of_ranges(u))
+		throw std::out_of_range("There is no vertexes (src or dst)");
+
 	int size = al.size();
 	vec_vis visits(size, false);
 

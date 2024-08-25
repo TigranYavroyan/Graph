@@ -1,7 +1,7 @@
 CC = g++
 HELPERSPATH = ../gr_helpers/
 INCLPATH = ./ $(HELPERSPATH)
-CFLAGS = -std=c++17 $(foreach H, $(INCLPATH), -I$(H))
+CFLAGS = -std=c++17 $(foreach H, $(INCLPATH), -I$(H)) -g
 MAIN = main.cpp
 HELPERS = $(HELPERSPATH)*.cpp
 EXEC = ./a.out
