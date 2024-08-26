@@ -13,5 +13,6 @@
 #include "sssp_top_sort.hpp"
 #include "sssp_djikstra.hpp"
 #include "sssp_bellman_ford.hpp"
+#include "mst_prim.hpp"
 
 #endif // GR_ADJ_LIST_HEADER_HPP

@@ -14,7 +14,8 @@ template <bool directed>
 class Graph_al {
 public:
 	using vec_2d = std::vector<std::vector<int>>;
-	using list = std::vector<std::vector<std::pair<int, int>>>;
+	using pair_i = std::pair<int, int>;
+	using list = std::vector<std::vector<pair_i>>;
 	using vec_vis = std::vector<bool>;
 public:
 	Graph_al (int n, const vec_2d& edges);
@@ -42,10 +43,15 @@ public:
 	std::vector<int> sssp_top_sort (int src, int dst) const; // O(V + E) + O(V + E)
 	std::vector<int> sssp_djikstra (int src, int dst) const; // O((V + E) * log V)
 	std::pair<std::vector<int>, bool> sssp_bellman_ford (int src, int dst) const; // O(V * (V + E)) + O(V * (V + E))
+	vec_2d mst_prim (int src = 0) const; 
 	void print () const;
 
 private:
 	list al;
+
+	struct pair_cmp {
+		bool operator() (const pair_i& a, const pair_i& b) { return a.second > b.second; }
+	};
 
 	bool _not_same_vals (int u, int v) const;
 

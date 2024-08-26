@@ -10,6 +10,7 @@ void graph_utils::print_path (const std::vector<int>& path) {
             if ((i + 1) != path.size()) std::cout << " -> ";
         }
     }
+    endl();
 }
 
 int graph_utils::edges_max (const std::vector<std::vector<int>>& edges) {

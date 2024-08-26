@@ -1,14 +1,6 @@
 #ifndef SSSP_DJIKSTRA
 #define SSSP_DJIKSTRA
 
-namespace {
-	struct pair_cmp {
-		bool operator() (const std::pair<int, int>& a, const std::pair<int, int>& b) {
-			return a.second > b.second;
-		}
-	};
-}
-
 // djikstra can't track negative cycles
 // so can't work with negative weights
 template <bool directed>
@@ -24,7 +16,7 @@ std::vector<int> Graph_al<directed>::sssp_djikstra (int src, int dst) const {
 		}
 	}
 
-	std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, pair_cmp> q;
+	std::priority_queue<pair_i, std::vector<pair_i>, pair_cmp> q;
 	std::vector<double> dist(size, std::numeric_limits<double>::infinity());
 	std::vector<int> paths(size, -1);
 

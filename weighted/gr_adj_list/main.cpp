@@ -3,7 +3,7 @@
 
 using std::vector;
 using namespace graph_utils;
-using Graph = Graph_al<true>;
+using Graph = Graph_al<false>;
 
 int main () {
 	vector<vector<int>> edges_1 = {
@@ -104,26 +104,55 @@ int main () {
 		{4, 5, 1},
 	};
 
-	vector<vector<int>> check = test;
+	// undirected graph for prim's algorithm
+	vector<vector<int>> for_mst = {
+		{0, 1, 3},
+		{0, 2, 5},
+		{0, 3, 6},
+		{1, 2, 10},
+		{1, 6, 2},
+		{2, 3, 1},
+		{2, 6, -1},
+		{3, 4, 7},
+		{3, 5, 3},
+		{4, 5, 4},
+		{4, 7, 8},
+		{5, 6, 1},
+		{5, 7, -4},
+		{6, 7, 7},
+	};
+
+	vector<vector<int>> check = for_mst;
 	int dst = edges_max(check);
 	int src = 0;
 
 	Graph gr(edges_max(check), check);
 	gr.print();
-	endl();
 
-	print_path(gr.sssp_top_sort(src, dst));
-	endl();
-	print_path(gr.sssp_djikstra(src, dst));
-	endl();
-	auto [res, flag] = gr.sssp_bellman_ford(src, dst);
+	auto res = gr.mst_prim();
 
-	if (flag) {
-		print_path(res);
-	}
-	else {
-		std::cout << "There is no path\n";
-		print_path(res);
-	}
-	endl();
+	for (int i = 0; i < res.size(); ++i) {
+        int row_size = res[i].size();
+        std::cout << i << " -> ";
+        for (int j = 0; j < row_size; ++j) {
+            std::cout << res[i][j];
+            if ((j + 1) != row_size) std::cout << ", ";
+        }
+        std::cout << '\n';
+    }
+
+	// print_path(gr.sssp_top_sort(src, dst));
+	// endl();
+	// print_path(gr.sssp_djikstra(src, dst));
+	// endl();
+	// auto [res, flag] = gr.sssp_bellman_ford(src, dst);
+
+	// if (flag) {
+	// 	print_path(res);
+	// }
+	// else {
+	// 	std::cout << "There is no path\n";
+	// 	print_path(res);
+	// }
+	// endl();
 }

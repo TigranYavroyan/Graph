@@ -9,7 +9,7 @@ void Graph_al<directed>::transpose () {
 
     int size = al.size();
 
-    list new_al(size, std::vector<std::pair<int, int>>());
+    list new_al(size, std::vector<pair_i>());
 
     for (int i = 0; i < size; ++i) {
         for (const auto& pair : al[i]) {
@@ -28,7 +28,7 @@ Graph_al<directed> Graph_al<directed>::clone_transpose () const {
 
     int size = al.size();
 
-    list new_al(size, std::vector<std::pair<int, int>>());
+    list new_al(size, std::vector<pair_i>());
 
     for (int i = 0; i < size; ++i) {
         for (const auto& pair : al[i]) {
